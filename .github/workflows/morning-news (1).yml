@@ -19,4 +19,5 @@ jobs:
       - name: Push morning news
         env:
           FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
+          SERVER3_SEND_KEY: ${{ secrets.SERVER3_SEND_KEY }}  # 👈 加上这一行
         run: python daily_news.py
