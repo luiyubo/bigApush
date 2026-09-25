@@ -97,14 +97,42 @@ def send_feishu(msg):
     """发送飞书消息"""
     webhook = os.environ.get("FEISHU_WEBHOOK", "")
     if not webhook:
-        print("FEISHU_WEBHOOK 未设置")
+        print("FEISHU_WEBHOOK 未设置，跳过飞书")
         return False
-    resp = requests.post(
-        webhook,
-        json={"msg_type": "text", "content": {"text": msg}},
-        timeout=10,
-    )
-    return resp.json().get("code") == 0
+    try:
+        resp = requests.post(
+            webhook,
+            json={"msg_type": "text", "content": {"text": msg}},
+            timeout=10,
+        )
+        return resp.json().get("code") == 0
+    except Exception as e:
+        print(f"飞书推送异常: {e}")
+        return False
+
+
+def send_wechat(msg):
+    """发送微信消息（Server酱3）"""
+    send_key = os.environ.get("SERVER3_SEND_KEY", "")
+    if not send_key:
+        print("SERVER3_SEND_KEY 未设置")
+        return False
+    url = f"https://sctapi.ftqq.com/{send_key}.send"
+    try:
+        # Server酱限制消息长度，微信卡片标题我们也加上日期
+        now_str = datetime.now().strftime('%Y-%m-%d')
+        resp = requests.post(
+            url,
+            data={"title": f"早安缅A 早间新闻 {now_str}", "desp": msg},
+            timeout=10
+        )
+        result = resp.json()
+        if result.get("code") == 0:
+            return True
+        print(f"微信推送失败: {result}")
+    except Exception as e:
+        print(f"微信推送异常: {e}")
+    return False
 
 
 def main():
@@ -143,10 +171,12 @@ def main():
     else:
         lines.append("  暂无新闻")
 
-    # 发送
+    # 发送逻辑：优先飞书，未配置则发微信
     msg = "\n".join(lines)
     if send_feishu(msg):
-        print(f"✅ 早间新闻推送成功 ({now.strftime('%H:%M:%S')})")
+        print(f"✅ 早间新闻推送成功 (飞书) ({now.strftime('%H:%M:%S')})")
+    elif send_wechat(msg):
+        print(f"✅ 早间新闻推送成功 (微信) ({now.strftime('%H:%M:%S')})")
     else:
         print("❌ 推送失败")
 
