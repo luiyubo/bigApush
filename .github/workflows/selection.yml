@@ -37,5 +37,6 @@ jobs:
       - name: Run selection and push
         env:
           FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
+          SERVER3_SEND_KEY: ${{ secrets.SERVER3_SEND_KEY }}  # 👈 加上这一行
         run: python main.py run
         timeout-minutes: 30
