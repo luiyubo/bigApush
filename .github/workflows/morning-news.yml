@@ -1,23 +1,23 @@
-姓名：早间新闻Python daily_news.py运行：Python daily_news.py
+name: 早间新闻
 
-在……之上:
-计划表:
--克朗: '0 0 * * *'
-workflow_dispatch:
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
 
-工作:
-推送新闻:
-连续的: Ubuntu-最新
-timeout-minutes: 10
-步骤:
--uses: 操作/结帐@v4
--uses: actions/setup-python@v5
-和……一起:
-Python版: '3.11'
-缓存: 'Pip'
--跑: PIP安装请求
--姓名: 推送早间新闻
-env:
-FEISHU_WEBHOOK：$server3_SEND_KEY{secrets.FEISHU_WEBHOOK}}
-server3_SEND_KEY: ${{secrets.SERVER3_SEND_KEY}}  # 👈 加上这一行
-跑: Python daily_news.py
+jobs:
+  push-news:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - run: pip install requests
+      - name: Push morning news
+        env:
+          FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
+          SERVER3_SEND_KEY: ${{ secrets.SERVER3_SEND_KEY }}  # 👈 加上这一行
+        run: python daily_news.py
