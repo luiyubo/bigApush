@@ -36,7 +36,7 @@ if:steps.check-db.outputs.exists=='false': steps.check-db.outputs.exists=='false
 timeout-minutes:45: 45
 -python main.py运行
 env:
-FEISHU_WEBHOOK：$server3_SEND_KEYsecrets。FEISHU_WEBHOOK30server3_SEND_KEYsecrets.FEISHU_WEBHOOK30}
-server3_SEND_KEY: ${{secrets.SERVER3_SEND_KEY}}  # 👈 加上这一行
+    FEISHU_WEBHOOK：$server3_SEND_KEYsecrets。FEISHU_WEBHOOK30server3_SEND_KEYsecrets.FEISHU_WEBHOOK30}
+    server3_SEND_KEY: ${{secrets.SERVER3_SEND_KEY}}  # 👈 加上这一行
 运行：Python main.py运行运行: Python main.py运行
 timeout-minutes:30 timeout-minutes: {
